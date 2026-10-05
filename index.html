@@ -7,25 +7,37 @@
 </head>
 <body>
     <script>
-      
-        let listaDeSuper = [];
-
         
-        listaDeSuper.push("Dulce de Leche")
+        let listaDeSuper = [];
+        
+        listaDeSuper.push("Dulce de Leche");
         listaDeSuper.push("1 kilo de naranja");
         listaDeSuper.push("Carne");
         listaDeSuper.push("Hamburgesas");
         listaDeSuper.push("Pan de Hamburgesas");
-
-        
+        listaDeSuper.push("Laxante Poderoso");
         
         let primerElemento = listaDeSuper[0];
-
-        
         let ultimoElemento = listaDeSuper.length - 1;
-
-        
         let elementoFinal = listaDeSuper[ultimoElemento];
+
+            // INSTRUCIONES
+        
+        // 1.  Agrega productos al final de la lista usando .push("y el item")  Ej ListaDeSuper.push("Carne")
+        
+        // 2. Agregá dos productos al principio de tu lista usando .unshift("y el item")
+        
+        // 3. Modifica el largodel Array actual usando la propiedad length
+        let largoActual = listaDeSuper.length;
+
+        // 4. Mover producto del final a variable "noHabia" usando .pop()
+        let noHabia = listaDeSuper.pop();
+
+        // 5. Mover productgo del principio a variable "comprado" usando .shift()
+        let comprado = listaDeSuper.shift();
+
+        // 6.Guardar nueva longitud
+        let largoFinal = listaDeSuper.length;
     </script>
 </body>
 </html>
