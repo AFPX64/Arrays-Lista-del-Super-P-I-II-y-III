@@ -3,65 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista del Super</title>
+    <title>Lista De Super</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+    </style>
 </head>
-<body>
-    
-    <h1>Lista del Super</h1>
+<body class="bg-slate-100 min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 text-slate-800">
+
+    <main class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 border border-slate-200/80">
+        <!-- Título Principal -->
+        <h1 class="text-3xl font-extrabold text-slate-900 text-center mb-6 tracking-tight">Lista De Super</h1>
+        
+        <div class="space-y-3 mb-6">
+            <!-- Barra de entrada de texto -->
+            <input type="text" id="itemInput" placeholder="Escribe un producto..." 
+                   class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition text-slate-800 bg-slate-50 placeholder-slate-400">
+            
+            <!-- Botones de Agregar y Eliminar -->
+            <div class="flex gap-2">
+                <button id="addBtn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Agregar
+                </button>
+                <button id="deleteBtn" class="flex-1 bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 px-4 rounded-xl shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Eliminar
+                </button>
+            </div>
+            
+            <!-- Mensaje de notificación -->
+            <div id="feedbackMsg" class="hidden text-xs text-center font-medium p-2 rounded-lg transition-all"></div>
+        </div>
+
+        <div>
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Productos (<span id="itemCount">0</span>)</h2>
+                <button id="logConsoleBtn" title="Imprimir en consola" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold transition">Ejecutar logItems()</button>
+            </div>
+            <ul id="superList" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+                <!-- Se llena dinámicamente con JavaScript -->
+            </ul>
+        </div>
+    </main>
+
     <script>
-        
-        let listaDeSuper = [];
-        
-        listaDeSuper.push("Dulce de Leche");
-        listaDeSuper.push("1 kilo de naranja");
-        listaDeSuper.push("Carne");
-        listaDeSuper.push("Hamburgesas");
-        listaDeSuper.push("Pan de Hamburgesas");
-        listaDeSuper.push("Laxante Poderoso");
-        
-        let primerElemento = listaDeSuper[0];
-        let ultimoElemento = listaDeSuper.length - 1;
-        let elementoFinal = listaDeSuper[ultimoElemento];
+        // Array inicial de elementos
+        let listaDeSuper = [
+            "Dulce de Leche",
+            "1 kilo de naranja",
+            "Carne",
+            "Hamburgesas",
+            "Pan de Hamburgesas",
+            "Laxante Poderoso"
+        ];
 
-        // INSTRUCIONES
-        
-        // 1.  Agrega productos al final de la lista usando .push("y el item")  Ej ListaDeSuper.push("Carne")
-        
-        // 2. Agregá dos productos al principio de tu lista usando .unshift("y el item")
-        
-        // 3. Modifica el largodel Array actual usando la propiedad length
-        let largoActual = listaDeSuper.length;
-
-        // 4. Mover producto del final a variable "noHabia" usando .pop()
-        let noHabia = listaDeSuper.pop();
-
-        // 5. Mover productgo del principio a variable "comprado" usando .shift()
-        let comprado = listaDeSuper.shift();
-
-        // 6.Guardar nueva longitud
-        let largoFinal = listaDeSuper.length;
-
+        // Función de impresión requerida (logItems)
         function logItems(arreglo) {
+            console.log("--- Lista de Supermercado ---");
             arreglo.forEach((producto, indice) => {
                 console.log(indice + ": " + producto);
             });
         }
 
-        let comando = "";
-        while (comando !== "salir") {
-            comando = prompt("Comando (nuevo, listar, borrar, salir):");
+        // Elementos DOM
+        const itemInput = document.getElementById('itemInput');
+        const addBtn = document.getElementById('addBtn');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const superList = document.getElementById('superList');
+        const itemCount = document.getElementById('itemCount');
+        const feedbackMsg = document.getElementById('feedbackMsg');
+        const logConsoleBtn = document.getElementById('logConsoleBtn');
 
-            if (comando === "nuevo") {
-                let nuevo = prompt("Ingrese producto:");
-                listaDeSuper.push(nuevo);
-            } else if (comando === "listar") {
-                logItems(listaDeSuper);
-            } else if (comando === "borrar") {
-                let i = prompt("Índice a borrar:");
-                let borrado = listaDeSuper.splice(i, 1);
-                console.log("Borrado: " + borrado[0]);
+        // Función para mostrar mensajes informativos breves
+        function showNotification(msg, isError = false) {
+            feedbackMsg.textContent = msg;
+            feedbackMsg.className = `text-xs text-center font-medium p-2 rounded-lg transition-all ${
+                isError ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'
+            }`;
+            feedbackMsg.classList.remove('hidden');
+            setTimeout(() => {
+                feedbackMsg.classList.add('hidden');
+            }, 2500);
+        }
+
+        // Renderizar elementos en pantalla
+        function renderList() {
+            superList.innerHTML = '';
+            
+            if (listaDeSuper.length === 0) {
+                superList.innerHTML = `<li class="text-center text-slate-400 italic py-6">La lista está vacía</li>`;
+                itemCount.textContent = '0';
+                return;
+            }
+
+            listaDeSuper.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'group flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-xl cursor-pointer border border-slate-200/70 transition select-none';
+                
+                const span = document.createElement('span');
+                span.className = 'font-medium text-slate-700 transition-all';
+                span.textContent = item;
+                
+                // Función para tachar/des-tachar al hacer clic sobre un elemento
+                li.addEventListener('click', () => {
+                    span.classList.toggle('completed');
+                });
+
+                const badge = document.createElement('span');
+                badge.className = 'text-xs text-slate-400 font-mono bg-white px-2 py-0.5 rounded-md border border-slate-200';
+                badge.textContent = `#${index}`;
+
+                li.appendChild(span);
+                li.appendChild(badge);
+                superList.appendChild(li);
+            });
+
+            itemCount.textContent = listaDeSuper.length;
+        }
+
+        // Función Agregar
+        function addItem() {
+            const val = itemInput.value.trim();
+            if (val === '') {
+                showNotification('Escribe el nombre de un producto', true);
+                return;
+            }
+            listaDeSuper.push(val);
+            renderList();
+            showNotification(`"${val}" fue agregado`);
+            itemInput.value = '';
+            itemInput.focus();
+        }
+
+        // Función Eliminar buscando por texto de la barra
+        function deleteItem() {
+            const val = itemInput.value.trim();
+            if (val === '') {
+                showNotification('Escribe en la barra el nombre del producto a eliminar', true);
+                return;
+            }
+
+            // Buscar producto ignorando mayúsculas/minúsculas
+            const index = listaDeSuper.findIndex(
+                item => item.toLowerCase() === val.toLowerCase()
+            );
+
+            if (index !== -1) {
+                const eliminado = listaDeSuper.splice(index, 1);
+                renderList();
+                showNotification(`"${eliminado[0]}" fue eliminado`);
+                itemInput.value = '';
+            } else {
+                showNotification(`No se encontró "${val}" en la lista`, true);
             }
         }
+
+        // Event Listeners
+        addBtn.addEventListener('click', addItem);
+        deleteBtn.addEventListener('click', deleteItem);
+        logConsoleBtn.addEventListener('click', () => logItems(listaDeSuper));
+
+        itemInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addItem();
+            }
+        });
+
+        // Carga inicial
+        renderList();
+        logItems(listaDeSuper);
     </script>
 </body>
 </html>
