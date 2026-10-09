@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-    
-<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +23,7 @@
         let ultimoElemento = listaDeSuper.length - 1;
         let elementoFinal = listaDeSuper[ultimoElemento];
 
-            // INSTRUCIONES
+        // INSTRUCIONES
         
         // 1.  Agrega productos al final de la lista usando .push("y el item")  Ej ListaDeSuper.push("Carne")
         
@@ -42,6 +40,28 @@
 
         // 6.Guardar nueva longitud
         let largoFinal = listaDeSuper.length;
+
+        function logItems(arreglo) {
+            arreglo.forEach((producto, indice) => {
+                console.log(indice + ": " + producto);
+            });
+        }
+
+        let comando = "";
+        while (comando !== "salir") {
+            comando = prompt("Comando (nuevo, listar, borrar, salir):");
+
+            if (comando === "nuevo") {
+                let nuevo = prompt("Ingrese producto:");
+                listaDeSuper.push(nuevo);
+            } else if (comando === "listar") {
+                logItems(listaDeSuper);
+            } else if (comando === "borrar") {
+                let i = prompt("Índice a borrar:");
+                let borrado = listaDeSuper.splice(i, 1);
+                console.log("Borrado: " + borrado[0]);
+            }
+        }
     </script>
 </body>
 </html>
