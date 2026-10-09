@@ -12,60 +12,66 @@
         }
         .completed {
             text-decoration: line-through;
-            opacity: 0.5;
+            opacity: 0.55;
+            color: #64748b;
         }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 text-slate-800">
 
     <main class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 border border-slate-200/80">
-        <!-- Título Principal -->
+        <!-- 1. Título visible -->
         <h1 class="text-3xl font-extrabold text-slate-900 text-center mb-6 tracking-tight">Lista De Super</h1>
         
+        <!-- 2. Barra de entrada de texto y Botón Agregar -->
         <div class="space-y-3 mb-6">
-            <!-- Barra de entrada de texto -->
-            <input type="text" id="itemInput" placeholder="Escribe un producto..." 
-                   class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition text-slate-800 bg-slate-50 placeholder-slate-400">
-            
-            <!-- Botones de Agregar y Eliminar -->
             <div class="flex gap-2">
-                <button id="addBtn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5">
+                <input type="text" id="itemInput" placeholder="Escribe un producto..." 
+                       class="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition text-slate-800 bg-slate-50 placeholder-slate-400">
+                
+                <button id="addBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-5 rounded-xl shadow-sm transition active:scale-95 flex items-center justify-center gap-1">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Agregar
                 </button>
-                <button id="deleteBtn" class="flex-1 bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 px-4 rounded-xl shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    Eliminar
-                </button>
             </div>
             
-            <!-- Mensaje de notificación -->
             <div id="feedbackMsg" class="hidden text-xs text-center font-medium p-2 rounded-lg transition-all"></div>
         </div>
 
         <div>
             <div class="flex justify-between items-center mb-3">
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Productos (<span id="itemCount">0</span>)</h2>
-                <button id="logConsoleBtn" title="Imprimir en consola" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold transition">Ejecutar logItems()</button>
+                <button id="logConsoleBtn" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold transition">Probar logItems()</button>
             </div>
+            
+            <!-- Lista interactiva de productos -->
             <ul id="superList" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
-                <!-- Se llena dinámicamente con JavaScript -->
+                <!-- Se llena dinámicamente -->
             </ul>
         </div>
     </main>
 
     <script>
-        // Array inicial de elementos
-        let listaDeSuper = [
-            "Dulce de Leche",
-            "1 kilo de naranja",
-            "Carne",
-            "Hamburgesas",
-            "Pan de Hamburgesas",
-            "Laxante Poderoso"
-        ];
+        let listaDeSuper = [];
+        
+        listaDeSuper.push("Dulce de Leche");
+        listaDeSuper.push("1 kilo de naranja");
+        listaDeSuper.push("Carne");
+        listaDeSuper.push("Hamburgesas");
+        listaDeSuper.push("Pan de Hamburgesas");
+        listaDeSuper.push("Laxante Poderoso");
+        
+        let primerElemento = listaDeSuper[0];
+        let ultimoElemento = listaDeSuper.length - 1;
+        let elementoFinal = listaDeSuper[ultimoElemento];
 
-        // Función de impresión requerida (logItems)
+        // INSTRUCCIONES ORIGINALES
+        let largoActual = listaDeSuper.length;
+        let noHabia = listaDeSuper.pop();
+        let comprado = listaDeSuper.shift();
+        let largoFinal = listaDeSuper.length;
+
+        // 1. Función logItems con .forEach()
         function logItems(arreglo) {
             console.log("--- Lista de Supermercado ---");
             arreglo.forEach((producto, indice) => {
@@ -73,16 +79,14 @@
             });
         }
 
-        // Elementos DOM
+        // DOM elements
         const itemInput = document.getElementById('itemInput');
         const addBtn = document.getElementById('addBtn');
-        const deleteBtn = document.getElementById('deleteBtn');
         const superList = document.getElementById('superList');
         const itemCount = document.getElementById('itemCount');
         const feedbackMsg = document.getElementById('feedbackMsg');
         const logConsoleBtn = document.getElementById('logConsoleBtn');
 
-        // Función para mostrar mensajes informativos breves
         function showNotification(msg, isError = false) {
             feedbackMsg.textContent = msg;
             feedbackMsg.className = `text-xs text-center font-medium p-2 rounded-lg transition-all ${
@@ -91,10 +95,18 @@
             feedbackMsg.classList.remove('hidden');
             setTimeout(() => {
                 feedbackMsg.classList.add('hidden');
-            }, 2500);
+            }, 2000);
         }
 
-        // Renderizar elementos en pantalla
+        // Eliminar producto por su índice usando .splice()
+        function deleteItem(index) {
+            const borrado = listaDeSuper.splice(index, 1);
+            showNotification(`Se eliminó: "${borrado[0]}"`);
+            renderList();
+            logItems(listaDeSuper);
+        }
+
+        // Renderizar la lista
         function renderList() {
             superList.innerHTML = '';
             
@@ -106,34 +118,57 @@
 
             listaDeSuper.forEach((item, index) => {
                 const li = document.createElement('li');
-                li.className = 'group flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-xl cursor-pointer border border-slate-200/70 transition select-none';
+                li.className = 'flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-200/70 transition select-none group';
                 
-                const span = document.createElement('span');
-                span.className = 'font-medium text-slate-700 transition-all';
-                span.textContent = item;
+                // Div interactivo para tachar
+                const textContainer = document.createElement('div');
+                textContainer.className = 'flex items-center gap-2 flex-1 cursor-pointer mr-2';
                 
-                // Función para tachar/des-tachar al hacer clic sobre un elemento
-                li.addEventListener('click', () => {
-                    span.classList.toggle('completed');
+                const indexSpan = document.createElement('span');
+                indexSpan.className = 'font-mono text-xs font-bold text-slate-400 bg-white px-1.5 py-0.5 rounded border border-slate-200';
+                indexSpan.textContent = `${index}:`;
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'font-medium text-slate-700 transition-all';
+                nameSpan.textContent = item;
+
+                textContainer.appendChild(indexSpan);
+                textContainer.appendChild(nameSpan);
+
+                // Evento para tachar/destachar al hacer clic
+                textContainer.addEventListener('click', () => {
+                    nameSpan.classList.toggle('completed');
                 });
 
-                const badge = document.createElement('span');
-                badge.className = 'text-xs text-slate-400 font-mono bg-white px-2 py-0.5 rounded-md border border-slate-200';
-                badge.textContent = `#${index}`;
+                // Botón con ícono de tacho de basura
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'text-slate-400 hover:text-rose-600 hover:bg-rose-50 p-2 rounded-lg transition-colors flex items-center justify-center';
+                deleteBtn.title = 'Eliminar producto';
+                deleteBtn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                `;
+                
+                // Evento de eliminación directa por tacho de basura
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteItem(index);
+                });
 
-                li.appendChild(span);
-                li.appendChild(badge);
+                li.appendChild(textContainer);
+                li.appendChild(deleteBtn);
                 superList.appendChild(li);
             });
 
             itemCount.textContent = listaDeSuper.length;
         }
 
-        // Función Agregar
+        // Agregar nuevo producto
         function addItem() {
             const val = itemInput.value.trim();
             if (val === '') {
-                showNotification('Escribe el nombre de un producto', true);
+                showNotification('Ingresa el nombre de un producto', true);
                 return;
             }
             listaDeSuper.push(val);
@@ -141,36 +176,13 @@
             showNotification(`"${val}" fue agregado`);
             itemInput.value = '';
             itemInput.focus();
+            logItems(listaDeSuper);
         }
 
-        // Función Eliminar buscando por texto de la barra
-        function deleteItem() {
-            const val = itemInput.value.trim();
-            if (val === '') {
-                showNotification('Escribe en la barra el nombre del producto a eliminar', true);
-                return;
-            }
-
-            // Buscar producto ignorando mayúsculas/minúsculas
-            const index = listaDeSuper.findIndex(
-                item => item.toLowerCase() === val.toLowerCase()
-            );
-
-            if (index !== -1) {
-                const eliminado = listaDeSuper.splice(index, 1);
-                renderList();
-                showNotification(`"${eliminado[0]}" fue eliminado`);
-                itemInput.value = '';
-            } else {
-                showNotification(`No se encontró "${val}" en la lista`, true);
-            }
-        }
-
-        // Event Listeners
+        // Listeners
         addBtn.addEventListener('click', addItem);
-        deleteBtn.addEventListener('click', deleteItem);
         logConsoleBtn.addEventListener('click', () => logItems(listaDeSuper));
-
+        
         itemInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 addItem();
